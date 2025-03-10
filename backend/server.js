@@ -1,12 +1,7 @@
-import express from 'express';
+import app from './app.js';
 
-const app = express();
-const PORT = 8080;
+const port = process.env.PORT;
 
-app.get('/', (req, res) => {
-  res.send('Server is running');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
