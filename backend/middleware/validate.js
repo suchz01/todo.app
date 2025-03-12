@@ -2,13 +2,25 @@ import { z } from 'zod';
 
 const authSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
-  name: z.string().optional()
+  password: z.string().min(6).optional(), 
+  name: z.string().optional(),
+  googleId: z.string().optional(),
+  picture: z.string().optional()
 });
 
 export const validateAuth = (req, res, next) => {
   try {
-    authSchema.parse(req.body);
+    if (req.path === '/google') {
+      return next();
+    }
+    
+    const schema = z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+      name: z.string().optional()
+    });
+    
+    schema.parse(req.body);
     next();
   } catch (error) {
     res.status(400).json({ message: 'Validation error', errors: error.errors });

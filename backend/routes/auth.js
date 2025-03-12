@@ -6,24 +6,20 @@ import { validateAuth } from '../middleware/validate.js';
 
 const router = Router();
 
-// Register new user
 router.post('/register', validateAuth, async (req, res) => {
   try {
     const { name, email, password } = req.body;
     
     // console.log('Registering user:', { name, email }); 
     
-    // Check if user already exists
     const existingUser = await Profile.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user
     const newUser = new Profile({
       name,
       email,
@@ -54,13 +50,11 @@ router.post('/login', validateAuth, async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
     const user = await Profile.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'User Not Registered' });
     }
 
-    // Validate password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(400).json({ message: 'Invalid password' });
@@ -75,6 +69,39 @@ router.post('/login', validateAuth, async (req, res) => {
 
     res.json({ token });
   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Add new route for Google login
+router.post('/google', async (req, res) => {
+  try {
+    const { email, name, googleId } = req.body;
+
+    let user = await Profile.findOne({ email });
+    
+    if (!user) {
+      user = new Profile({
+        email,
+        name,
+        googleId
+      });
+      await user.save();
+    } else if (!user.googleId) {
+      user.googleId = googleId;
+      await user.save();
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Google auth error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

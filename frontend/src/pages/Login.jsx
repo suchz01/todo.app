@@ -73,7 +73,6 @@ const Login = () => {
     });
   }
   const googleLogin = useGoogleLogin({
-    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
     onSuccess: async (codeResponse) => {
       try {
         const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
@@ -82,17 +81,35 @@ const Login = () => {
           }
         });
         const profileData = await response.json();
-        console.log(profileData)
-        navigate("/");
+
+        const backendResponse = await fetch(`${import.meta.env.VITE_BACKEND}/auth/google`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: profileData.email,
+            name: profileData.name,
+            googleId: profileData.id
+          })
+        });
+        if (!backendResponse.ok) {
+          throw new Error('Failed to authenticate with backend');
+        }
+        const data = await backendResponse.json();
+        localStorage.setItem('token', data.token);
+        fetchUser();
+        navigate('/dashboard');
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error("Error during Google login:", error);
+        setError("Failed to login with Google");
       }
     },
     onError: (error) => {
-      console.error("Login Failed:", error);
-    },
+      console.error("Google Login Failed:", error);
+      setError("Google login failed");
+    }
   });
-
 
   return (
     <div className="mt-16 min-h-screen md:mt-0 p-20 flex flex-col justify-center items-center text-center px-4">
