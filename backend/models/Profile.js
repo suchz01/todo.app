@@ -6,7 +6,13 @@ const ProfileSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String },
     googleId: { type: String },
+    dob: { type: Date },
+    phone: { type: String },
+    bio: { type: String },
+    profilePicture: { type: String },
+    gender: { type: String, enum: ['Male', 'Female', 'Other', 'Prefer not to say'] },
     todos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Todo" }]
+    
   },
   { timestamps: true } 
 );

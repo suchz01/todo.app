@@ -2,7 +2,8 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Profile from '../models/Profile.js';
-import { validateAuth } from '../middleware/validate.js';
+import { validateAuth, validateProfileUpdate, validatePasswordChange } from '../middleware/validate.js';
+import auth from '../middleware/auth.js';
 
 const router = Router();
 
@@ -102,6 +103,77 @@ router.post('/google', async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.error('Google auth error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Get user profile
+router.get('/profile', auth, async (req, res) => {
+  try {
+    const user = await Profile.findById(req.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Update user profile
+router.put('/profile', auth, validateProfileUpdate, async (req, res) => {
+  try {
+    const updates = req.body;
+    
+    // Convert date string to Date object if provided
+    if (updates.dob) {
+      updates.dob = new Date(updates.dob);
+    }
+    
+    const user = await Profile.findByIdAndUpdate(
+      req.userId,
+      { $set: updates },
+      { new: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Change password
+router.put('/change-password', auth, validatePasswordChange, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    // Get user with password
+    const user = await Profile.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Check if user has a password (might be a Google user)
+    if (!user.password) {
+      return res.status(400).json({ message: 'Cannot change password for accounts without password' });
+    }
+    
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    
+    await user.save();
+    
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

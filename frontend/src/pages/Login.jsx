@@ -180,7 +180,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="cursor-pointer w-full p-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer w-full p-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition text-white font-semibold disabled:opacity-50"
           >
             {loading ? (
               <span>Loading...</span>

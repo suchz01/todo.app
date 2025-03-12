@@ -11,8 +11,10 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = useCallback(() => {
+    setLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -25,22 +27,26 @@ export const UserProvider = ({ children }) => {
     } else {
       setUser(null);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  if (!user && (window.location.pathname === "/dashboard"||window.location.pathname === "/profile")) {
-    window.location.href = "/login";
-  }
+  useEffect(() => {
+    if (!loading && !user && (window.location.pathname === "/dashboard" || window.location.pathname === "/profile")) {
+      window.location.href = "/login";
+    }
+  }, [loading, user]);
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, fetchUser, logout }}>
+    <UserContext.Provider value={{ user, fetchUser, logout, loading }}>
       {children}
     </UserContext.Provider>
   );
