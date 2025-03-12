@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import StartFree from "./StartFree";
 import MobileDropdown from "./MobileDropdown";
 const Navbar = () => {
-
   return (
     <nav className="items-center justify-items-center flex md:grid absolute w-full z-50">
       <div className="w-5/6 flex p-10 justify-between ">
@@ -63,13 +62,15 @@ const Navbar = () => {
                         React Docs
                       </a>
                     </li>
-                    <li><a
-              href="https://www.reactbits.dev/"
-              target="_blank"
-              className="block p-1 rounded-md hover:bg-gray-100 transition"
-            >
-              reactbits.dev
-            </a></li>
+                    <li>
+                      <a
+                        href="https://www.reactbits.dev/"
+                        target="_blank"
+                        className="block p-1 rounded-md hover:bg-gray-100 transition"
+                      >
+                        reactbits.dev
+                      </a>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>

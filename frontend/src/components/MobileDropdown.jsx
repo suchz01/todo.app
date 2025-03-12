@@ -8,11 +8,11 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSub,
   } from "@/components/ui/dropdown-menu";
-  import { Link } from "react-router-dom";
   import { Menu, X } from "lucide-react";
-  import StartFree from "./StartFree";
+  import { useNavigate } from "react-router-dom";
 
 const MobileDropdown = () => {
+  const navigate = useNavigate();
       const [isOpen, setIsOpen] = useState(false);
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -21,14 +21,14 @@ const MobileDropdown = () => {
     </DropdownMenuTrigger>
     <DropdownMenuContent className="space-y-2 min-w-48">
       <DropdownMenuItem>
-        <Link to="/features" className="hover:text-white transition">
+        <button onClick={() => navigate("/features")} className="">
           Features
-        </Link>
+        </button>
       </DropdownMenuItem>
       <DropdownMenuItem>
-        <Link to="/pricing" className="hover:text-white transition">
+        <button onClick={() => navigate("/pricing")} className="">
           Pricing
-        </Link>
+        </button>
       </DropdownMenuItem>
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>Resources</DropdownMenuSubTrigger>
@@ -37,7 +37,7 @@ const MobileDropdown = () => {
             <a
               href="https://tailwindcss.com/"
               target="_blank"
-              className="block p-1 rounded-md hover:bg-gray-100 transition"
+              className="block p-1"
             >
               Tailwind CSS
             </a>
@@ -46,7 +46,7 @@ const MobileDropdown = () => {
             <a
               href="https://ui.shadcn.com/"
               target="_blank"
-              className="block p-1 rounded-md hover:bg-gray-100 transition"
+              className="block p-1"
             >
               ShadCn
             </a>
@@ -55,7 +55,7 @@ const MobileDropdown = () => {
             <a
               href="https://react.dev/"
               target="_blank"
-              className="block p-1 rounded-md hover:bg-gray-100 transition"
+              className="block p-1"
             >
               React Docs
             </a>
@@ -64,16 +64,13 @@ const MobileDropdown = () => {
             <a
               href="https://www.reactbits.dev/"
               target="_blank"
-              className="block p-1 rounded-md hover:bg-gray-100 transition"
+              className="block p-1"
             >
               reactbits.dev
             </a>
           </DropdownMenuItem>
         </DropdownMenuSubContent>
       </DropdownMenuSub>
-      <div className="flex justify-center">
-        <StartFree />
-      </div>
     </DropdownMenuContent>
   </DropdownMenu>
   )

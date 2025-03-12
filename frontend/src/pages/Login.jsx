@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { loginUser, registerUser } from "@/lib/api";
-
+import { useUser } from "@/context/UserContext";
+import { useGoogleLogin } from "@react-oauth/google";
 const Login = () => {
   const navigate = useNavigate();
+  const { fetchUser } = useUser();
   const [isSignup, setIsSignup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -50,6 +52,7 @@ const Login = () => {
       
       // Store token
       localStorage.setItem('token', response.token);
+      fetchUser(); 
       
       // Redirect to dashboard
       navigate('/dashboard');
@@ -59,6 +62,37 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const handleChange=() => {
+    setIsSignup((prev) => !prev);
+    setError("");
+    setFormData({
+      email: "",
+      password: "",
+      name: "",
+      confirmPassword: "",
+    });
+  }
+  const googleLogin = useGoogleLogin({
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+    onSuccess: async (codeResponse) => {
+      try {
+        const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
+          headers: {
+            Authorization: `Bearer ${codeResponse.access_token}`
+          }
+        });
+        const profileData = await response.json();
+        console.log(profileData)
+        navigate("/");
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    },
+    onError: (error) => {
+      console.error("Login Failed:", error);
+    },
+  });
+
 
   return (
     <div className="mt-16 min-h-screen md:mt-0 p-20 flex flex-col justify-center items-center text-center px-4">
@@ -140,7 +174,10 @@ const Login = () => {
         </form>
         
         <div className="mt-4">
-          <button className="w-full p-3 rounded-lg border border-gray-700 hover:bg-gray-800/50 transition flex items-center justify-center gap-2 cursor-pointer">
+          <button 
+            onClick={() => googleLogin()} 
+            className="w-full p-3 rounded-lg border border-gray-700 hover:bg-gray-800/50 transition flex items-center justify-center gap-2 cursor-pointer"
+          >
             <FcGoogle size={20} />
             <span>Continue with Google</span>
           </button>
@@ -149,7 +186,7 @@ const Login = () => {
         <p className="mt-4 text-gray-400">
           {isSignup ? "Already have an account?" : "Don't have an account?"}
           <button
-            onClick={() => setIsSignup(!isSignup)}
+            onClick={() => handleChange()}
             className="ml-2 text-sky-500 hover:text-sky-400 cursor-pointer"
           >
             {isSignup ? "Login" : "Sign Up"}

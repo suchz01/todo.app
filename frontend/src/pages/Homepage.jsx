@@ -1,23 +1,31 @@
 import React from "react";
 import Hyperspeed from "../components/ui/Hyperspeed";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 
 const Homepage = () => {
+  const { user } = useUser();
    const navigate = useNavigate();
+   const navigateUser=()=>{
+    if(user)
+      navigate("/dashboard");
+    else
+    navigate("/login")
+   }
   return (
     <div className="flex flex-col items-center justify-center text-center px-4 h-screen z-10">
-      <h1 className="marvel-bold text-5xl md:text-7xl lg:text-9xl z-10">
-        ORGANIZE IT ALL
-      </h1>
-      <h2 className="marvel-regular text-4xl md:text-6xl lg:text-8xl mt-4 z-10">
-        TODO AT TODO.APP
-      </h2>
+      <p className="marvel-bold text-5xl md:text-7xl lg:text-9xl z-10">
+        ORGANIZE ALL TODO
+      </p>
+      <p className="marvel-regular text-4xl md:text-6xl lg:text-8xl mt-4 z-10">
+         AT TODO.APP
+      </p>
       <p className="text-lg md:text-xl mt-6 max-w-2xl text-slate-300 z-10">
         Manage all your tasks in one place with statuses, priorities, and easy
         tracking.
       </p>
-      <button className="mt-8 px-6 py-3 backdrop-blur-2xl bg-transparent border-2 border-white hover:scale-110 transition rounded-full hover:cursor-pointer z-10" onClick={() => navigate("/login")}>
-        Get Started for Free
+      <button className="mt-8 px-6 py-3 backdrop-blur-2xl bg-transparent border-2 border-white hover:scale-110 transition rounded-full hover:cursor-pointer z-10" onClick={() => navigateUser()}>
+        {user?"Go to Dashboard":"Get Started for Free"}
       </button>
       <Hyperspeed
         effectOptions={{

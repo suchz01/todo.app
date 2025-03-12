@@ -33,9 +33,9 @@ const Features = () => {
 
   return (
     <div className="mt-16 min-h-screen md:mt-0 p-20 flex flex-col justify-center items-center text-center px-4">
-      <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+      <p className="text-5xl md:text-6xl font-bold text-center mb-4 bg-clip-text text-transparent  bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient">
         Key Features of Our To-Do App
-      </h1>
+      </p>
       <p className="text-lg text-gray-300 max-w-2xl mb-8">
         Stay organized and boost your productivity with our feature-rich task
         management app.
@@ -51,9 +51,9 @@ const Features = () => {
                      transition-all duration-500 ease-in-out
                      hover:scale-105 hover:shadow-sky-500/20"
           >
-            <h3 className="text-xl font-semibold text-sky-400 mb-2">
+            <p className="text-xl font-semibold text-sky-400 mb-2">
               {feature.title}
-            </h3>
+            </p>
             <p className="text-gray-300">{feature.description}</p>
           </div>
         ))}
