@@ -4,7 +4,7 @@ const getAuthHeader = () => {
   const token = localStorage.getItem('token');
   return {
     'Content-Type': 'application/json',
-    'x-auth-token': token
+    'Authorization': `Bearer ${token}`
   };
 };
 

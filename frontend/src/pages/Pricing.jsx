@@ -4,7 +4,7 @@ const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 text-white mt-16 md:mt-0">
+    <div className=" flex flex-col items-center justify-center px-4 py-16 text-white">
       <div className="max-w-4xl w-full text-center">
         <h1 className="text-5xl md:text-6xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient">
           Choose Your Perfect Plan

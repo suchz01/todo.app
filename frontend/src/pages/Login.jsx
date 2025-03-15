@@ -13,12 +13,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    confirmPassword: "",
-  });
+  const [formData, setFormData] = useState({});
 
   const validateForm = () => {
     if (!formData.email || !formData.password) {
@@ -50,11 +45,9 @@ const Login = () => {
         ? await registerUser(formData.name, formData.email, formData.password)
         : await loginUser(formData.email, formData.password);
       
-      // Store token
       localStorage.setItem('token', response.token);
       fetchUser(); 
       
-      // Redirect to dashboard
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
@@ -112,7 +105,7 @@ const Login = () => {
   });
 
   return (
-    <div className="mt-16 min-h-screen md:mt-0 p-20 flex flex-col justify-center items-center text-center px-4">
+    <div className="mt-15 p-20 flex flex-col justify-center items-center text-center px-4">
       <div className="p-8 rounded-lg shadow-lg border border-gray-700/50 bg-gradient-to-r from-sky-300/10 to-sky-500/10 hover:from-sky-300/20 hover:to-sky-500/20 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-sky-500/20 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6">{isSignup ? "Sign Up" : "Login"}</h2>
         
@@ -127,7 +120,7 @@ const Login = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition"
+              className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500  outline-none transition"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -136,7 +129,7 @@ const Login = () => {
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition"
+            className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 outline-none transition"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
@@ -145,7 +138,7 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition"
+              className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500  outline-none transition"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
@@ -163,7 +156,7 @@ const Login = () => {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
-                className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition"
+                className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-sky-500 outline-none transition"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               />

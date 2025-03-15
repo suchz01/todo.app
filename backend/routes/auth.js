@@ -3,15 +3,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Profile from '../models/Profile.js';
 import { validateAuth, validateProfileUpdate, validatePasswordChange } from '../middleware/validate.js';
-import auth from '../middleware/auth.js';
+import { verifyToken } from '../middleware/auth.js';
 
 const router = Router();
 
 router.post('/register', validateAuth, async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
-    // console.log('Registering user:', { name, email }); 
     
     const existingUser = await Profile.findOne({ email });
     if (existingUser) {
@@ -28,7 +26,6 @@ router.post('/register', validateAuth, async (req, res) => {
     });
 
     await newUser.save();
-    // console.log('User created successfully:', newUser._id);
 
     // Generate JWT token
     const token = jwt.sign(
@@ -39,14 +36,13 @@ router.post('/register', validateAuth, async (req, res) => {
 
     res.status(201).json({ token });
   } catch (error) {
-    console.error('Registration error:', error);
+    // console.error(error);
     res.status(500).json({ 
       message: 'Server error during registration'
     });
   }
 });
 
-// Login user
 router.post('/login', validateAuth, async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -56,7 +52,7 @@ router.post('/login', validateAuth, async (req, res) => {
       return res.status(400).json({ message: 'User Not Registered' });
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(400).json({ message: 'Invalid password' });
     }
@@ -74,7 +70,6 @@ router.post('/login', validateAuth, async (req, res) => {
   }
 });
 
-// Add new route for Google login
 router.post('/google', async (req, res) => {
   try {
     const { email, name, googleId } = req.body;
@@ -93,7 +88,6 @@ router.post('/google', async (req, res) => {
       await user.save();
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
@@ -107,10 +101,9 @@ router.post('/google', async (req, res) => {
   }
 });
 
-// Get user profile
-router.get('/profile', auth, async (req, res) => {
+router.get('/profile', verifyToken, async (req, res) => {
   try {
-    const user = await Profile.findById(req.userId).select('-password');
+    const user = await Profile.findById(req.user.id).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -120,18 +113,15 @@ router.get('/profile', auth, async (req, res) => {
   }
 });
 
-// Update user profile
-router.put('/profile', auth, validateProfileUpdate, async (req, res) => {
+router.put('/profile', verifyToken, validateProfileUpdate, async (req, res) => {
   try {
     const updates = req.body;
-    
-    // Convert date string to Date object if provided
     if (updates.dob) {
       updates.dob = new Date(updates.dob);
     }
     
     const user = await Profile.findByIdAndUpdate(
-      req.userId,
+      req.user.id,
       { $set: updates },
       { new: true }
     ).select('-password');
@@ -146,18 +136,13 @@ router.put('/profile', auth, validateProfileUpdate, async (req, res) => {
   }
 });
 
-// Change password
-router.put('/change-password', auth, validatePasswordChange, async (req, res) => {
+router.put('/change-password', verifyToken, validatePasswordChange, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    
-    // Get user with password
-    const user = await Profile.findById(req.userId);
+    const user = await Profile.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
-    // Check if user has a password (might be a Google user)
     if (!user.password) {
       return res.status(400).json({ message: 'Cannot change password for accounts without password' });
     }

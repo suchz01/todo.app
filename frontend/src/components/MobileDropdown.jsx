@@ -11,6 +11,7 @@ import {
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
+import { Github } from 'lucide-react';
 const MobileDropdown = () => {
   const { user, logout } = useUser();
   const navigate = useNavigate();
@@ -21,6 +22,16 @@ const MobileDropdown = () => {
         {isOpen ? <X size={28} /> : <Menu size={28} />}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="space-y-2 min-w-48">
+      <DropdownMenuItem>
+              <a
+                href="https://github.com/suchz01/todo.app"
+                target="blank"
+                className="hover:text-white transition"
+              >
+                <div className="flex items-center">
+                  <Github className="w-5"/>Github</div>
+              </a>
+            </DropdownMenuItem>
         <DropdownMenuItem>
           <button onClick={() => navigate("/features")} className="w-full text-left">
             Features
@@ -87,6 +98,15 @@ const MobileDropdown = () => {
             <DropdownMenuItem className="bg-red-500 text-white ">
               <button onClick={() =>logout()} className="w-full text-left">
                 Logout
+              </button>
+            </DropdownMenuItem>
+          </>
+        )}
+        {!user && (
+          <>
+            <DropdownMenuItem className="bg-green-500 text-white ">
+              <button onClick={() => navigate("/login")} className="w-full text-left">
+                Login
               </button>
             </DropdownMenuItem>
           </>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -6,18 +7,35 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
 import StartFree from "./StartFree";
 import MobileDropdown from "./MobileDropdown";
+import { Github } from 'lucide-react';
+
 const Navbar = () => {
+  const location = useLocation();
+
   return (
-    <nav className="items-center justify-items-center flex md:grid absolute w-full z-50">
+    <nav
+      className={`items-center justify-items-center flex md:grid w-full ${
+        location.pathname === "/" ? "absolute z-20" : ""
+      }`}
+    >
       <div className="w-5/6 flex p-10 justify-between ">
-        <Link to="/" className="text-2xl">
+        <Link to="/" className="text-3xl text-sky-500 font-bold ">
           todo.app
         </Link>
         <NavigationMenu>
           <NavigationMenuList className="hidden md:flex space-x-6 text-gray-300">
+            <NavigationMenuItem>
+              <a
+                href="https://github.com/suchz01/todo.app"
+                target="blank"
+                className="hover:text-white transition"
+              >
+                <div className="flex items-center">
+                  <Github className="w-5"/>Github</div>
+              </a>
+            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link to="/features" className="hover:text-white transition">
                 Features

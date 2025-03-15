@@ -39,8 +39,7 @@ export const validateProfileUpdate = (req, res, next) => {
           { message: "Invalid phone number" }
         ),        
       bio: z.string().max(500, { message: "Bio cannot exceed 500 characters" }).optional(),
-      profilePicture: z.string().url({ message: "Invalid URL format" }).optional(),
-      gender: z.enum(['Male', 'Female', 'Other', 'Prefer not to say'], {
+      gender: z.enum(['Male', 'Female', 'Other'], {
         errorMap: () => ({ message: "Invalid gender selection" })
       }).optional()
     });
@@ -52,7 +51,6 @@ export const validateProfileUpdate = (req, res, next) => {
   }
 };
 
-// Password change validation
 export const validatePasswordChange = (req, res, next) => {
   try {
     const passwordChangeSchema = z.object({
@@ -76,17 +74,21 @@ export const validatePasswordChange = (req, res, next) => {
 
 const todoSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().optional(),
+  description: z.string().optional().refine(
+    (val) => {
+      if (!val) return true; // Allow empty descriptions
+      return val.length <= 100;
+    },
+    { message: "Description cannot exceed 100 characters" }
+  ),
   dueDate: z.string().refine(val => !isNaN(new Date(val).getTime()), {
     message: "Invalid date format"
   }),
-  priority: z.enum(["Low", "Medium", "High"], {
-    errorMap: () => ({ message: "Priority must be Low, Medium, or High" })
-  }).default("Low"),
-  category: z.string().optional(),
-  status: z.enum(["Pending", "In Progress", "Completed"], {
-    errorMap: () => ({ message: "Status must be Pending, In Progress, or Completed" })
-  }).default("Pending")
+  dueTime: z.string().optional(),
+  priority: z.enum(["low", "normal", "high", "urgent"], {
+    errorMap: () => ({ message: "Priority must be low, normal, high, or urgent" })
+  }).default("normal"),
+  completed: z.boolean().optional().default(false)
 });
 
 export const validateTodo = (req, res, next) => {

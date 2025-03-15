@@ -9,10 +9,8 @@ const ProfileSchema = new mongoose.Schema(
     dob: { type: Date },
     phone: { type: String },
     bio: { type: String },
-    profilePicture: { type: String },
-    gender: { type: String, enum: ['Male', 'Female', 'Other', 'Prefer not to say'] },
+    gender: { type: String, enum: ['Male', 'Female', 'Other'] },
     todos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Todo" }]
-    
   },
   { timestamps: true } 
 );

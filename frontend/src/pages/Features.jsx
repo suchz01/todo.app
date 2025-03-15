@@ -32,8 +32,8 @@ const Features = () => {
   ];
 
   return (
-    <div className="mt-16 min-h-screen md:mt-0 p-20 flex flex-col justify-center items-center text-center px-4">
-      <p className="text-5xl md:text-6xl font-bold text-center mb-4 bg-clip-text text-transparent  bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient">
+    <div className=" p-20 flex flex-col justify-center items-center text-center px-4">
+      <p className="text-5xl md:text-6xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient">
         Key Features of Our To-Do App
       </p>
       <p className="text-lg text-gray-300 max-w-2xl mb-8">

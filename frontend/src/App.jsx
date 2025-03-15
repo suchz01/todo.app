@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { UserProvider } from "./context/UserContext";
 import Profile from "./pages/Profile";
+import { Toaster } from "./components/ui/sonner";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </BrowserRouter>
+        <Toaster />
       </div>
     </UserProvider>
   );

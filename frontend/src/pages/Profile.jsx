@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getUserProfile, updateUserProfile, changePassword } from "@/lib/api";
 import { useUser } from "@/context/UserContext";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import ProfileInformation from "@/components/ProfileInformation";
+import PasswordChange from "@/components/PasswordChange";
 
 const Profile = () => {
   const { fetchUser, loading: authLoading } = useUser();
@@ -19,16 +13,11 @@ const Profile = () => {
   const [messageVisible, setMessageVisible] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [profileData, setProfileData] = useState({});
-
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
-
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (success || error) {
@@ -126,7 +115,7 @@ const Profile = () => {
     }
 
     if (!passwordData.newPassword) {
-      errors.newPassword = "New password is required";
+      errors.newPassword = "New password is required";  
     } else if (passwordData.newPassword.length < 6) {
       errors.newPassword = "New password must be at least 6 characters";
     } else if (
@@ -208,10 +197,11 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 p-4 md:p-8 lg:p-12 md:mt-24 mt-10 ">
+    <div className="pt-20 p-4 md:p-8 lg:p-12">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-bold text-center md:text-left mb-4 bg-clip-text text-transparent  bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient ">Profile Settings</h1>
-
+        <h1 className="text-5xl md:text-6xl font-bold text-center md:text-left mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-300 to-sky-500 animate-gradient">
+          Profile Settings
+        </h1>
         <div className="flex mb-8 border-b border-gray-700">
           <button
             className={`px-4 py-2 font-medium cursor-pointer ${
@@ -234,7 +224,6 @@ const Profile = () => {
             Change Password
           </button>
         </div>
-
         {success && (
           <div
             className={`mb-4 p-3 bg-green-500/20 border border-green-500/50 text-green-200 rounded-lg transition-opacity duration-200 ${
@@ -256,300 +245,24 @@ const Profile = () => {
         )}
 
         {activeTab === "profile" && (
-          <div className="p-6 rounded-lg shadow-lg border border-gray-700/50 bg-gradient-to-r from-sky-300/10 to-sky-500/10 hover:from-sky-300/20 hover:to-sky-500/20 transition-all duration-500 ease-in-out hover:scale-100 scale-95">
-            <form onSubmit={handleProfileSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={profileData.name || ""}
-                    onChange={handleProfileChange}
-                    className={`w-full p-3 rounded-lg bg-gray-800/50 border h-16 ${
-                      validationErrors.name
-                        ? "border-red-500"
-                        : "border-gray-700"
-                    } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                  />
-                  {validationErrors.name && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.name}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileData.email || ""}
-                    disabled
-                    className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 opacity-70 cursor-not-allowed"
-                  />
-                  <p className="text-xs text-gray-400 mt-1 ml-1">
-                    Email cannot be changed
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    name="dob"
-                    value={profileData.dob || ""}
-                    onChange={handleProfileChange}
-                    className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                      validationErrors.dob
-                        ? "border-red-500"
-                        : "border-gray-700"
-                    } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                  />
-                  {validationErrors.dob && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.dob}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={profileData.phone || ""}
-                    onChange={handleProfileChange}
-                    pattern="[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}"
-                    className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                      validationErrors.phone
-                        ? "border-red-500"
-                        : "border-gray-700"
-                    } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                  />
-                  {validationErrors.phone && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.phone}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Gender
-                  </label>
-                  <Select
-                    onValueChange={(value) =>
-                      handleProfileChange({ target: { name: "gender", value } })
-                    }
-                    value={profileData.gender || ""}
-                  >
-                    <SelectTrigger
-                      className={`w-full h-12 p-3 rounded-lg bg-gray-800/50 border ${
-                        validationErrors.gender
-                          ? "border-red-500"
-                          : "border-gray-700"
-                      } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition cursor-pointer`}
-                    >
-                      <SelectValue placeholder="Select Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male" className="cursor-pointer">
-                        Male
-                      </SelectItem>
-                      <SelectItem value="Female" className="cursor-pointer">
-                        Female
-                      </SelectItem>
-                      <SelectItem value="Other" className="cursor-pointer">
-                        Other
-                      </SelectItem>
-                      <SelectItem
-                        value="Prefer not to say"
-                        className="cursor-pointer"
-                      >
-                        Prefer not to say
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {validationErrors.gender && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.gender}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Bio</label>
-                <textarea
-                  name="bio"
-                  value={profileData.bio || ""}
-                  onChange={handleProfileChange}
-                  rows="4"
-                  maxLength="500"
-                  className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                    validationErrors.bio ? "border-red-500" : "border-gray-700"
-                  } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                ></textarea>
-                {validationErrors.bio && (
-                  <p className="text-red-400 text-xs mt-1">
-                    {validationErrors.bio}
-                  </p>
-                )}
-                <p className="text-xs text-gray-400 mt-1">
-                  {profileData.bio ? profileData.bio.length : 0}/500 characters
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="cursor-pointer px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Saving..." : "Save Changes"}
-              </button>
-            </form>
-          </div>
+          <ProfileInformation
+            profileData={profileData}
+            handleProfileChange={handleProfileChange}
+            validationErrors={validationErrors}
+            loading={loading}
+            handleProfileSubmit={handleProfileSubmit}
+          />
         )}
 
         {activeTab === "password" && (
-          <div className="p-6 rounded-lg shadow-lg border border-gray-700/50 bg-gradient-to-r from-sky-300/10 to-sky-500/10 hover:from-sky-300/20 hover:to-sky-500/20 transition-all duration-500 ease-in-out hover:scale-100 scale-95">
-            {profileData.googleId && !profileData.password ? (
-              <div className="text-center p-6">
-                <p className="text-lg mb-2">You signed up with Google</p>
-                <p className="text-gray-400">
-                  Password change is not available for accounts created with
-                  Google.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                <div className="relative">
-                  <label className="block text-sm font-medium mb-2">
-                    Current Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showCurrentPassword ? "text" : "password"}
-                      name="currentPassword"
-                      value={passwordData.currentPassword}
-                      onChange={handlePasswordChange}
-                      className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                        validationErrors.currentPassword
-                          ? "border-red-500"
-                          : "border-gray-700"
-                      } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowCurrentPassword(!showCurrentPassword)
-                      }
-                      className="absolute right-3 top-2/7 text-gray-400 hover:text-gray-300"
-                    >
-                      {showCurrentPassword ? (
-                        <AiOutlineEyeInvisible size={20} />
-                      ) : (
-                        <AiOutlineEye size={20} />
-                      )}
-                    </button>
-                  </div>
-                  {validationErrors.currentPassword && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.currentPassword}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <label className="block text-sm font-medium mb-2">
-                    New Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showNewPassword ? "text" : "password"}
-                      name="newPassword"
-                      value={passwordData.newPassword}
-                      onChange={handlePasswordChange}
-                      className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                        validationErrors.newPassword
-                          ? "border-red-500"
-                          : "border-gray-700"
-                      } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-2/7 text-gray-400 hover:text-gray-300"
-                    >
-                      {showNewPassword ? (
-                        <AiOutlineEyeInvisible size={20} />
-                      ) : (
-                        <AiOutlineEye size={20} />
-                      )}
-                    </button>
-                  </div>
-                  {validationErrors.newPassword && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.newPassword}
-                    </p>
-                  )}
-                </div>
-                <div className="relative">
-                  <label className="block text-sm font-medium mb-2">
-                    Confirm New Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      value={passwordData.confirmPassword}
-                      onChange={handlePasswordChange}
-                      className={`w-full p-3 rounded-lg bg-gray-800/50 border ${
-                        validationErrors.confirmPassword
-                          ? "border-red-500"
-                          : "border-gray-700"
-                      } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 top-2/7 text-gray-400 hover:text-gray-300"
-                    >
-                      {showConfirmPassword ? (
-                        <AiOutlineEyeInvisible size={20} />
-                      ) : (
-                        <AiOutlineEye size={20} />
-                      )}
-                    </button>
-                  </div>
-                  {validationErrors.confirmPassword && (
-                    <p className="text-red-400 text-xs mt-1">
-                      {validationErrors.confirmPassword}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="cursor-pointer px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? "Changing Password..." : "Change Password"}
-                </button>
-              </form>
-            )}
-          </div>
+          <PasswordChange
+            profileData={profileData}
+            passwordData={passwordData}
+            handlePasswordChange={handlePasswordChange}
+            validationErrors={validationErrors}
+            loading={loading}
+            handlePasswordSubmit={handlePasswordSubmit}
+          />
         )}
       </div>
     </div>
