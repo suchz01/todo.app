@@ -7,7 +7,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lol":"npm install --force"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.4",
@@ -19,7 +20,6 @@
     "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.12",
     "axios": "^1.8.3",
-    "browser-router": "^0.2.0",
     "chrono-node": "^2.7.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

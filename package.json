@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && npm run start\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ins": "npm install && concurrently \"cd frontend && npm install\" \"cd backend && npm install\""
+    "ins": "npm install && concurrently \"cd frontend && npm run lol\" \"cd backend && npm install\""
   },
   "author": "",
   "license": "ISC",
