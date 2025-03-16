@@ -156,7 +156,7 @@ const Sidebar = ({
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
           transition-transform duration-300 ease-in-out
           fixed md:relative z-20 md:z-0 
-          w-72 md:w-56 h-[100dvh]
+          w-72 md:w-56
           bg-[#1f1f1f] border-r border-[#333333]
           md:translate-x-0
           left-0 top-0 

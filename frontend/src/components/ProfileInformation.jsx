@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const ProfileInformation = ({
   profileData,
@@ -98,21 +105,30 @@ const ProfileInformation = ({
             <label className="block text-sm font-medium mb-2">
               Gender
             </label>
-            <select
+            <Select
               name="gender"
               value={profileData.gender || ""}
-              onChange={handleProfileChange}
-              className={`w-full h-12 p-3 rounded-lg bg-gray-800/50 border ${
-                validationErrors.gender
-                  ? "border-red-500"
-                  : "border-gray-700"
-              } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition cursor-pointer`}
+              onValueChange={(value) => 
+                handleProfileChange({ 
+                  target: { name: "gender", value } 
+                })
+              }
             >
-              <option value="" disabled>Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+              <SelectTrigger 
+                className={`w-full h-12 bg-gray-800/50 border ${
+                  validationErrors.gender
+                    ? "border-red-500"
+                    : "border-gray-700"
+                } focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition cursor-pointer`}
+              >
+                <SelectValue placeholder="Select Gender" />
+              </SelectTrigger>
+              <SelectContent className={`bg-gray-800 text-white`}>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
             {validationErrors.gender && (
               <p className="text-red-400 text-xs mt-1">
                 {validationErrors.gender}

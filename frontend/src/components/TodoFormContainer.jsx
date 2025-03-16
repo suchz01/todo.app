@@ -11,7 +11,7 @@ const TodoFormContainer = ({
 }) => {
   if (!showAddForm && !editingTodo) return null;
   
-  console.log("TodoFormContainer - editingTodo:", editingTodo);
+  // console.log("TodoFormContainer - editingTodo:", editingTodo);
   
   return (
     <div 

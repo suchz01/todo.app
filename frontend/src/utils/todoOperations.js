@@ -37,7 +37,7 @@ export const createTodoOperations = (setTodos) => {
 
     handleUpdateTodo: async (updatedTodo, todos) => {
       try {
-        console.log("Updating todo:", updatedTodo);
+        // console.log("Updating todo:", updatedTodo);
         
         if (!updatedTodo._id) {
           console.error("Cannot update todo: Missing ID");
@@ -57,7 +57,7 @@ export const createTodoOperations = (setTodos) => {
           priority: updatedTodo.priority,
           completed: updatedTodo.completed !== undefined ? updatedTodo.completed : (originalTodo ? originalTodo.completed : false)
         };
-        console.log("Todo data being sent:", todoData);
+        // console.log("Todo data being sent:", todoData);
 
         const response = await axios.put(
           `${API_BASE_URL}/todos/${updatedTodo._id}`,
@@ -69,7 +69,7 @@ export const createTodoOperations = (setTodos) => {
           }
         );
 
-        console.log("Response from server:", response.data);
+        // console.log("Response from server:", response.data);
         if (response.data) {
           setTodos((prevTodos) =>
             prevTodos.map((todo) =>

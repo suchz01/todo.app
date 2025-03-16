@@ -115,6 +115,9 @@ const TimePicker = ({ value, onChange, onClear, onDateChange }) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4 bg-[#2a2a2a] border-[#444444]" align="start">
         <div className="flex flex-col space-y-4">
+          <div className="text-xs text-gray-400 text-center mb-1 pb-2 border-b border-[#444444]">
+            Times in the past will be set to tomorrow
+          </div>
           <div className="grid grid-cols-3 gap-2 text-white">
             {quickTimeOptions.map(option => (
               <Button

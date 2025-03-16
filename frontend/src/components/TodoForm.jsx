@@ -29,7 +29,6 @@ const TodoForm = ({ onSubmit, initialData = null, onCancel }) => {
 
   useEffect(() => {
     if (initialData) {
-      console.log("Initializing form with data:", initialData);
       setFormData({
         title: initialData.title || "",
         description: initialData.description || "",
@@ -50,20 +49,29 @@ const TodoForm = ({ onSubmit, initialData = null, onCancel }) => {
       
       if (parsedResults && parsedResults.length > 0) {
         const parsedDate = parsedResults[0].start.date();
-        
         if (parsedDate && isValid(parsedDate)) {
           const currentDate = new Date();
+          
           if (isBefore(parsedDate, currentDate)) {
             const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+            const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
             const containsOnlyMonth = monthNames.some(month => 
               text.toLowerCase().includes(month) && !text.match(/\d{4}/)
             );
-            
+            const containsDayName = dayNames.some(day => 
+              text.toLowerCase().includes(day)
+            );
+            const containsOnlyTime = /\b\d{1,2}(:\d{2})?\s*(am|pm)\b/i.test(text) && 
+              !containsDayName && 
+              !text.match(/tomorrow|next|later|upcoming/i);
             if (containsOnlyMonth) {
               parsedDate.setFullYear(currentDate.getFullYear() + 1);
+            } else if (containsDayName) {
+              parsedDate.setDate(parsedDate.getDate() + 7);
+            } else if (containsOnlyTime || isToday(parsedDate)) {
+              parsedDate.setDate(parsedDate.getDate() + 1);
             }
-          }
-          
+          }          
           setDateError("");
           return parsedDate;
         }
@@ -125,6 +133,9 @@ const TodoForm = ({ onSubmit, initialData = null, onCancel }) => {
           ...prev,
           dueDate: tomorrow
         }));
+        
+        setDateError("Time is in the past - set to tomorrow instead");
+        setTimeout(() => setDateError(""), 3000); 
         return true;
       }
     }
@@ -156,7 +167,6 @@ const TodoForm = ({ onSubmit, initialData = null, onCancel }) => {
       _id: initialData?._id,
       completed: initialData && initialData.completed !== undefined ? initialData.completed : formData.completed || false
     };
-    console.log("Submitting form data:", submissionData);
 
     if (formData.dueDate && formData.dueTime) {
       const { isAdjusted } = validateAndAdjustDateTime(
@@ -233,6 +243,9 @@ const TodoForm = ({ onSubmit, initialData = null, onCancel }) => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 bg-[#2a2a2a] border-[#444444]" align="start">
+              <div className="p-2 border-b border-[#444444] bg-[#2a2a2a] text-center">
+                <span className="text-xs text-gray-400">Only future dates can be selected</span>
+              </div>
               <Calendar
                 mode="single"
                 selected={formData.dueDate}
