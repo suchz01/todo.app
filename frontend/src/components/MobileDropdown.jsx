@@ -29,7 +29,7 @@ const MobileDropdown = () => {
                 className="hover:text-white transition"
               >
                 <div className="flex items-center">
-                  <Github className="w-5"/>Github</div>
+                  <Github className=""/>Github</div>
               </a>
             </DropdownMenuItem>
         <DropdownMenuItem>
