@@ -103,6 +103,7 @@ const Login = () => {
               email: profileData.email,
               name: profileData.name,
               googleId: profileData.id,
+              profilePicture: profileData.picture,
             }),
           }
         );

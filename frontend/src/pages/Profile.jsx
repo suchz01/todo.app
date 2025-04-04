@@ -33,25 +33,25 @@ const Profile = () => {
     }
   }, [success, error]);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoading(true);
-        const data = await getUserProfile();
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const data = await getUserProfile();
 
-        if (data.dob) {
-          const date = new Date(data.dob);
-          data.dob = date.toISOString().split("T")[0];
-        }
-
-        setProfileData(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (data.dob) {
+        const date = new Date(data.dob);
+        data.dob = date.toISOString().split("T")[0];
       }
-    };
 
+      setProfileData(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, []);
 
@@ -251,6 +251,7 @@ const Profile = () => {
             validationErrors={validationErrors}
             loading={loading}
             handleProfileSubmit={handleProfileSubmit}
+            fetchProfile={fetchProfile}
           />
         )}
 

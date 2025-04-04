@@ -15,10 +15,14 @@ const ProfileInformation = ({
   validationErrors,
   loading,
   handleProfileSubmit,
+  fetchProfile,
 }) => {
   return (
     <div className="p-6 rounded-lg shadow-lg border border-gray-700/50 bg-gradient-to-r from-sky-300/10 to-sky-500/10 hover:from-sky-300/20 hover:to-sky-500/20 transition-all duration-500 ease-in-out hover:scale-100 scale-95">
-      <ProfilePicture />
+      <ProfilePicture 
+      profileData={profileData}
+      fetchProfile={fetchProfile}
+      />
       <form onSubmit={handleProfileSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>

@@ -72,7 +72,7 @@ router.post('/login', validateAuth, async (req, res) => {
 
 router.post('/google', async (req, res) => {
   try {
-    const { email, name, googleId } = req.body;
+    const { email, name, googleId,profilePicture } = req.body;
 
     let user = await Profile.findOne({ email });
     
@@ -80,7 +80,8 @@ router.post('/google', async (req, res) => {
       user = new Profile({
         email,
         name,
-        googleId
+        googleId,
+        profilePicture
       });
       await user.save();
     } else if (!user.googleId) {

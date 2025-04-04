@@ -129,6 +129,6 @@ export const createTodoOperations = (setTodos) => {
         toast.error("Error updating task status. Please try again.");
         return false;
       }
-    },z
+    },
   };
 }; 

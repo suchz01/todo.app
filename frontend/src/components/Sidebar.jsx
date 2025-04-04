@@ -1,5 +1,7 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { useUser } from '../context/UserContext';
 import {
   CheckCircle,
   Circle,
@@ -7,8 +9,10 @@ import {
   Clock,
   Flag,
   X,
+  LogOut
 } from "lucide-react";
 import { isToday, isBefore, startOfDay } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const priorityOptions = [
   {
@@ -121,6 +125,29 @@ const Sidebar = ({
   sidebarOpen,
   setSidebarOpen,
 }) => {
+  const navigate = useNavigate();
+  
+    const { logout } = useUser();
+  const [user, setUser] = useState("");
+  const fetchUserPic = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND}/auth/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // console.log(response);
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+    }
+  }
+  useEffect(() => {
+    fetchUserPic();
+  }, []);
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
     if (window.innerWidth < 768) {
@@ -163,7 +190,7 @@ const Sidebar = ({
         `}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-[#333333] md:hidden">
+          <div className="flex items-center p-4 border-b border-[#333333] md:hidden">
             <h2 className="text-lg font-bold text-sky-500">Tasks</h2>
             <Button
               variant="ghost"
@@ -198,6 +225,27 @@ const Sidebar = ({
                 })}
               </div>
             </div>
+            <div className=" p-4 border-t border-[#333333]">
+            <div className="flex items-center gap-3 cursor-pointer" 
+                onClick={()=>navigate("/profile")}>
+              <img 
+                src={user.profilePicture} 
+                alt="Profile" 
+                className="w-10 h-10 rounded-full"
+              />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-white">{user.name}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => logout()}
+                className="text-gray-400 hover:text-white hover:bg-red-600 cursor-pointer"
+              >
+                <LogOut />
+              </Button>
+            </div>
+          </div>
           </div>
         </div>
       </div>
